@@ -1,0 +1,80 @@
+### Postgres
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.db.name }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/app: {{ .Values.db.name }}
+  serviceName: {{ .Values.db.name }}-svc
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/app: {{ .Values.db.name }}
+    spec:
+      containers:
+      - name: {{ .Values.db.name }}
+        image: "{{ .Values.db.image}}:{{ .Values.db.version }}"
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: {{ .Values.db.port }}
+        volumeMounts:
+        - name: "{{ .Values.db.image}}-{{ .Values.db.version }}-pvc"
+          mountPath: /var/lib/postgresql/data
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "1"
+          limits:
+            memory: "512Mi"
+            cpu: "1"
+        envFrom:
+          - configMapRef:
+              name: {{ .Values.appName }}-config
+          - secretRef:
+              name: {{ .Values.appName }}-secret
+  volumeClaimTemplates:
+  - metadata:
+      name: "{{ .Values.db.image}}-{{ .Values.db.version }}-pvc"
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
+
+
+---
+### Redis
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.redis.name }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/app: {{ .Values.redis.name }}
+  serviceName: {{ .Values.redis.name }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/app: {{ .Values.redis.name }}
+    spec:
+      containers:
+      - name: {{ .Values.redis.name }}
+        image: "{{ .Values.redis.image }}:{{ .Values.redis.version }}"
+        ports:
+        - containerPort: {{ .Values.redis.port }}
+        volumeMounts:
+        - name: "{{ .Values.redis.image}}-{{ .Values.redis.version }}-pvc"
+          mountPath: /data
+  volumeClaimTemplates:
+  - metadata:
+      name: "{{ .Values.redis.image}}-{{ .Values.redis.version }}-pvc"
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 1Gi

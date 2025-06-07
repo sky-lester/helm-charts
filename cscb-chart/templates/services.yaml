@@ -1,0 +1,42 @@
+
+### Deployment Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.appName }}-svc
+spec:
+  selector:
+    app.kubernetes.io/app: {{ .Values.appName }}
+  ports:
+  - port: {{ .Values.service.port }}
+    targetPort: {{ .Values.containerPort }}
+
+---
+### DB Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.db.name }}-svc
+spec:
+  selector:
+    app.kubernetes.io/app: {{ .Values.db.name }}
+  ports:
+    - protocol: TCP
+      port: {{ .Values.db.port }}
+      targetPort: {{ .Values.db.port }}
+
+---
+### Redis Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.redis.name }}
+  labels:
+    app.kubernetes.io/app: {{ .Values.redis.name }}
+spec:
+  clusterIP: None
+  selector:
+    app.kubernetes.io/app: {{ .Values.redis.name }}
+  ports:
+  - port: {{ .Values.redis.port }}
+    targetPort: {{ .Values.redis.port }}

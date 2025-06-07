@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ .Values.appName }}-config"
+data:
+  POSTGRES_HOST: "{{ .Values.configMap.POSTGRES_HOST }}"
+  POSTGRES_DB: "{{ .Values.configMap.POSTGRES_DB }}"
+  POSTGRES_PORT: "{{ .Values.configMap.POSTGRES_PORT }}"
