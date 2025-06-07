@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  cscb-chart:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2025-06-07T13:13:01.989523+08:00"
+    description: A Helm chart for Kubernetes
+    digest: 146c61dadf73a204fb2a42fa024c205a76b94f94f12c089e33e60120976d2785
+    name: cscb-chart
+    type: application
+    urls:
+    - https://github.com/sky-lester/helm-charts/cscb-chart-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-06-07T13:13:01.987582+08:00"
