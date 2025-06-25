@@ -3,23 +3,23 @@ entries:
   cscb-chart:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2025-06-25T09:12:48.301545+08:00"
-    description: A Helm chart for Kubernetes
-    digest: dec7a0abe8e0ef697abd68a24a7a0844737b14feb20bba7240c00a85ecd40f7e
+    created: "2025-06-25T09:32:01.998777+08:00"
+    description: A custom helm chart for staffme CSCB Django Application
+    digest: 801449b5611e809ccda8ea2f016f0933b5bf4f2a97200795a463c53793fb7e0c
     name: cscb-chart
     type: application
     urls:
-    - https://sky-lester.github.io/helm-charts/cscb-chart-0.1.0.tgz
-    version: 0.1.0
-  wp-chart:
+    - https://sky-lester.github.io/helm-charts/cscb-chart-0.1.1.tgz
+    version: 0.1.1
+  cswp-chart:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2025-06-25T09:12:48.304136+08:00"
-    description: A Custom Helm chart for staffme CS Wordpress Sites
-    digest: d21e77a5d34c749399297067414a9da675aaaf66f80f5d51b79d3644dc80c752
-    name: wp-chart
+    created: "2025-06-25T09:32:02.000626+08:00"
+    description: A Custom Helm chart for staffme CS Wordpress Application
+    digest: 733ff3f3ff56b245e348d135e568c27669f48ce9e1f35c2d995e2fa28b1fd903
+    name: cswp-chart
     type: application
     urls:
-    - https://sky-lester.github.io/helm-charts/wp-chart-0.1.1.tgz
-    version: 0.1.1
-generated: "2025-06-25T09:12:48.298646+08:00"
+    - https://sky-lester.github.io/helm-charts/cswp-chart-0.1.3.tgz
+    version: 0.1.3
+generated: "2025-06-25T09:32:01.996019+08:00"

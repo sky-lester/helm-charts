@@ -1,6 +1,6 @@
 apiVersion: v2
-name: wp-chart
-description: A Custom Helm chart for staffme CS Wordpress Sites
+name: cswp-chart
+description: A Custom Helm chart for staffme CS Wordpress Application
 type: application
-version: 0.1.1
+version: 0.1.3
 appVersion: "1.16.0"
