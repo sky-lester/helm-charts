@@ -1,0 +1,90 @@
+appName: cswp
+
+image:
+  repository: wordpress
+  tag: latest
+  pullPolicy: Always
+  pullSecret:
+    enabled: false
+    name: ghcr-secrets
+
+containerPort: 80
+
+storageClassName: "local-path-expandable"
+
+persistentVolumeClaim:
+  name: html-claim
+  accessMode: ReadWriteOnce
+  size: 10Gi
+
+volumeMounts:
+    name: home
+    mountPath: /var/www/html
+
+volumes:
+    name: home
+    persistentVolumeClaim:
+      claimName: html-claim
+
+service:
+  type: ClusterIP
+  port: 8000
+
+phpmyadmin:
+  enabled: true
+  port: 80
+  serviceType: ClusterIP
+  servicePort: 8080
+
+autoscaling:
+  minReplicas: 1
+  maxReplicas: 1
+  targetCPUUtilizationPercentage: 80
+
+configMap:
+  DB_HOST: mysql-svc
+  DB_NAME: test
+  DB_PORT: "3306"
+  DB_USER: test
+  WORDPRESS_HOME: "http://dev-cswp.cswp.local"
+  WP_UPLOADS_PATH: "./wp-content/uploads"
+
+db:
+  enabled: true
+  name: "mysql"
+  port: "3306"
+  image: "mysql"
+  version: "latest"
+  mountPath: "/var/lib/mysql"
+  storage: 5Gi
+  storageClassName: "local-path-expandable"
+
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    # nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  hosts:
+    - host: dev-cswp.cswp.local
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: cswp-svc
+              portNumber: 8000
+    - host: dev-cswp-pma.cswp.local
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: cswp-pma-svc
+              portNumber: 8080
+  # tls:
+  #  - secretName: dev-cswp-local-tls
+  #    hosts:
+  #      - dev-cswp.local

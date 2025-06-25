@@ -1,0 +1,94 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appName }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/app: {{ .Values.appName }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/app: {{ .Values.appName }}
+    spec:
+      {{- if .Values.image.pullSecret.enabled }}
+      imagePullSecrets:
+        - name: {{ .Values.image.pullSecret.name }}
+      {{- end }}
+      containers:
+      - name: {{ .Values.appName }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag}}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        
+        {{- with .Values.readinessProbe }}
+        readinessProbe:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+
+        {{- with .Values.resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        
+        ports:
+          - name: http
+            containerPort: {{ .Values.containerPort }}
+
+        envFrom:
+          - configMapRef:
+              name: {{ .Values.appName }}-config
+          - secretRef:
+              name: {{ .Values.appName }}-secret
+        env:
+        - name: PODNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        volumeMounts:
+          - name: {{ .Values.volumeMounts.name }}
+            mountPath: {{ .Values.volumeMounts.mountPath }}
+
+      volumes:
+        - name: {{ .Values.volumes.name }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistentVolumeClaim.name }}
+
+---
+{{- if .Values.phpmyadmin.enabled -}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appName }}-pma
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/app: {{ .Values.appName }}-pma
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/app: {{ .Values.appName }}-pma
+    spec:
+      containers:
+      - name: {{ .Values.appName }}-pma
+        image: "phpmyadmin/phpmyadmin"
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: {{ .Values.phpmyadmin.port }}
+        envFrom:
+          - configMapRef:
+              name: {{ .Values.appName }}-config
+          - secretRef:
+              name: {{ .Values.appName }}-secret
+        env:
+          - name: UPLOAD_LIMIT
+            value: "1024M"
+          - name: PHP_UPLOAD_MAX_FILESIZE
+            value: "1024M"
+          - name: PHP_POST_MAX_SIZE
+            value: "1024M"
+          - name: PHP_MAX_EXECUTION_TIME
+            value: "600"
+---
+{{- end }}

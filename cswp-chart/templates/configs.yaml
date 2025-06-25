@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ .Values.appName }}-config"
+data:
+  WORDPRESS_DB_HOST: "{{ .Values.configMap.DB_HOST }}"
+  WORDPRESS_DB_NAME: "{{ .Values.configMap.DB_NAME }}"
+  WORDPRESS_DB_USER:  "{{ .Values.configMap.DB_USER }}" 
+  DB_PORT: "{{ .Values.configMap.DB_PORT }}"
+  MYSQL_DATABASE: "{{ .Values.configMap.DB_NAME }}"
+  MYSQL_USER: "{{ .Values.configMap.DB_USER }}"
+  PMA_HOST: "{{ .Values.configMap.DB_HOST }}"
+  WORDPRESS_HOME: "{{ .Values.configMap.WORDPRESS_HOME }}"
+  WORDPRESS_SITEURL: "{{ .Values.configMap.WORDPRESS_HOME }}"
+  WP_UPLOADS_PATH: "{{ .Values.configMap.WP_UPLOADS_PATH }}"

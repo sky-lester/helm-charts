@@ -1,0 +1,40 @@
+appName: "cscb"
+
+replicaCount: 1
+
+image:
+  repository: django-cscb
+  pullPolicy: Never
+  tag: "gunicorn"
+
+containerPort: 8000
+
+service:
+  type: ClusterIP
+  port: 9000
+
+
+autoscaling:
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50
+
+
+configMap:
+  POSTGRES_HOST: "postgres-svc"
+  POSTGRES_DB: "cscb"
+  POSTGRES_PORT: "5432"
+
+ingress:
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    host: "prod.cscb.local"
+
+
+db:
+  name: "postgres"
+  port: "5432"
+  image: "postgres"
+  version: "17"
