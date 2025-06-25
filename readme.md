@@ -21,8 +21,8 @@ helm upgrade --install dev1 staffme/cswp-chart -f values.yaml -n dev1 --create-n
 
 ## Uninstall an Application
 
-helm uninstall [RELEASE_NAME]
+helm uninstall [RELEASE_NAME] -n [NAMESPACE]
 
 ```
-helm uninstall dev1
+helm uninstall dev1 -n dev1
 ```
